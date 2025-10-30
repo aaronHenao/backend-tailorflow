@@ -15,6 +15,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { AuthModule } from './common/modules/auth/auth.module';
 import { OracleProceduresModule } from './modules/oracleprocedures/oracle-procedures.module';
+import { DatabaseViewsModule } from './modules/database-views/database-views.module';
 
 @Module({
   imports: [RolesModule, 
@@ -47,6 +48,7 @@ import { OracleProceduresModule } from './modules/oracleprocedures/oracle-proced
     TasksModule,
     AuthModule,
     OracleProceduresModule,
+    DatabaseViewsModule,
    ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,0 +1,120 @@
+###############################################################################
+# API ENDPOINTS - DATABASE VIEWS MODULE
+# TailorFlow Backend
+#
+# IMPORTANTE: Todos estos endpoints requieren autenticación JWT y rol ADMIN
+#
+# Para usar estos ejemplos:
+# 1. Primero autenticarse en el endpoint de login
+# 2. Copiar el access_token de la respuesta
+# 3. Reemplazar {{token}} con el token obtenido
+###############################################################################
+
+### Variables
+@baseUrl = http://localhost:3000
+@token = YOUR_ACCESS_TOKEN_HERE
+
+###############################################################################
+# AUTENTICACIÓN
+###############################################################################
+
+### Login como ADMIN
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "cc": "admin123",
+  "password": "password"
+}
+
+###############################################################################
+# VW_DETALLE_PRODUCTO - Detalles de Productos
+###############################################################################
+
+### Obtener todos los detalles de productos
+GET {{baseUrl}}/database-views/product-details
+Authorization: Bearer {{token}}
+
+### Obtener detalles de un producto específico (ID = 1)
+GET {{baseUrl}}/database-views/product-details/1
+Authorization: Bearer {{token}}
+
+###############################################################################
+# VW_CONSUMO_MATERIALES - Consumo de Materiales
+###############################################################################
+
+### Obtener todo el consumo de materiales
+GET {{baseUrl}}/database-views/material-consumption
+Authorization: Bearer {{token}}
+
+### Obtener consumo de materiales por área específica
+GET {{baseUrl}}/database-views/material-consumption/area/TAPICERIA
+Authorization: Bearer {{token}}
+
+### Otro ejemplo - área ESQUELETERIA
+GET {{baseUrl}}/database-views/material-consumption/area/ESQUELETERIA
+Authorization: Bearer {{token}}
+
+###############################################################################
+# VW_ALERTA_STOCK_MINIMO - Alertas de Stock Mínimo
+###############################################################################
+
+### Obtener todas las alertas de stock mínimo
+GET {{baseUrl}}/database-views/stock-alerts
+Authorization: Bearer {{token}}
+
+### Obtener alertas de stock mínimo por área específica
+GET {{baseUrl}}/database-views/stock-alerts/area/TAPICERIA
+Authorization: Bearer {{token}}
+
+### Otro ejemplo - área CORTE
+GET {{baseUrl}}/database-views/stock-alerts/area/CORTE
+Authorization: Bearer {{token}}
+
+###############################################################################
+# VW_TAREAS_ATRASADAS - Tareas en Proceso
+###############################################################################
+
+### Obtener todas las tareas en proceso
+GET {{baseUrl}}/database-views/delayed-tasks
+Authorization: Bearer {{token}}
+
+### Obtener tareas en proceso por área específica
+GET {{baseUrl}}/database-views/delayed-tasks/area/TAPICERIA
+Authorization: Bearer {{token}}
+
+### Otro ejemplo - área ESQUELETERIA
+GET {{baseUrl}}/database-views/delayed-tasks/area/ESQUELETERIA
+Authorization: Bearer {{token}}
+
+### Obtener tareas en proceso por empleado específico
+GET {{baseUrl}}/database-views/delayed-tasks/employee/Juan Perez
+Authorization: Bearer {{token}}
+
+###############################################################################
+# EJEMPLOS DE ERRORES ESPERADOS
+###############################################################################
+
+### Error 401 - Sin token de autenticación
+GET {{baseUrl}}/database-views/product-details
+
+### Error 403 - Usuario sin rol ADMIN (cambiar token por un usuario no-admin)
+GET {{baseUrl}}/database-views/product-details
+Authorization: Bearer EMPLOYEE_TOKEN_HERE
+
+### Error 404 - Producto no existe
+GET {{baseUrl}}/database-views/product-details/99999
+Authorization: Bearer {{token}}
+
+###############################################################################
+# NOTAS:
+# - Reemplazar {{token}} con el access_token obtenido del endpoint de login
+# - Los nombres de áreas deben coincidir exactamente con los de la BD
+# - Los nombres de empleados pueden tener espacios (URL encoding automático)
+# - Todos los endpoints retornan el formato estándar:
+#   {
+#     "statusCode": 200,
+#     "message": "Mensaje descriptivo",
+#     "data": [ ... ]
+#   }
+###############################################################################
