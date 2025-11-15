@@ -1,55 +1,50 @@
-import { Entity, PrimaryColumn, Generated, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {Entity,PrimaryGeneratedColumn,Column,ManyToOne,JoinColumn,OneToMany} from 'typeorm';
 import { Order } from 'src/modules/orders/entities/order.entity';
 import { Category } from 'src/modules/categories/entities/category.entity';
 import { State } from 'src/common/entities/state.entity';
 import { Task } from 'src/modules/tasks/entities/task.entity';
 
-@Entity('PRODUCTS')
+@Entity('products')
 export class Product {
-
-  @PrimaryColumn({ name: 'ID_PRODUCT', type: 'number' })
-  @Generated('increment')
+  @PrimaryGeneratedColumn({ name: 'id_product', type: 'integer' })
   id_product: number;
 
-  @Column({ name: 'ID_ORDER', type: 'number', nullable: false })
+  @Column({ name: 'id_order', type: 'integer', nullable: false })
   id_order: number;
 
-  @Column({ name: 'ID_CATEGORY', type: 'number', nullable: false })
+  @Column({ name: 'id_category', type: 'integer', nullable: false })
   id_category: number;
 
-  @Column({ name: 'ID_STATE', type: 'number', nullable: false, default: 1 })
+  @Column({ name: 'id_state', type: 'integer', nullable: false, default: 1 })
   id_state: number;
 
-  @Column({ name: 'NAME', type: 'varchar2', length: 100, nullable: false })
+  @Column({ name: 'name', type: 'varchar', length: 100, nullable: false })
   name: string;
 
-  @Column({ name: 'CUSTOMIZED', type: 'number', default: 0 })
-  customized: number;
-
-  @Column({ name: 'REF_PHOTO', type: 'varchar2', length: 255, nullable: true })
+  @Column({ name: 'ref_photo', type: 'varchar', length: 255, nullable: true })
   ref_photo?: string;
 
-  @Column({ name: 'DIMENSIONS', type: 'varchar2', length: 100, nullable: true })
+  @Column({ name: 'dimensions', type: 'varchar', length: 100, nullable: true })
   dimensions?: string;
 
-  @Column({ name: 'FABRIC', type: 'varchar2', length: 100, nullable: true })
+  @Column({ name: 'fabric', type: 'varchar', length: 100, nullable: true })
   fabric?: string;
 
-  @Column({ name: 'DESCRIPTION', type: 'varchar2', length: 300, nullable: true })
+  @Column({ name: 'description', type: 'varchar', length: 300, nullable: true })
   description?: string;
 
-  @ManyToOne(() => Order, (order) => order.id_order)
-  @JoinColumn({ name: 'ID_ORDER' })
+  @ManyToOne(() => Order, (order) => order.products, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'id_order' })
   order: Order;
 
-  @ManyToOne(() => Category, (category) => category.id_category)
-  @JoinColumn({ name: 'ID_CATEGORY' })
+  @ManyToOne(() => Category, (category) => category.products, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'id_category' })
   category: Category;
 
-  @ManyToOne(() => State, (state) => state.id_state)
-  @JoinColumn({ name: 'ID_STATE' })
+  @ManyToOne(() => State, (state) => state.products, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'id_state' })
   state: State;
 
-  @OneToMany(() => Task, task => task.product)
+  @OneToMany(() => Task, (task) => task.product)
   tasks: Task[];
 }

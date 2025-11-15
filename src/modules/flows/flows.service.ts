@@ -18,7 +18,7 @@ export class FlowsService {
     ) { }
 
     async findAll(): Promise<FlowResponseDto[]> {
-        const flows = await this.flowRepository.find({ relations: ['role', 'category'] });
+        const flows = await this.flowRepository.find({ relations: ['role', 'category', 'role.area'] });
 
         if (!flows || flows.length === 0) {
             throw new NotFoundException('No se encontraron flujos');

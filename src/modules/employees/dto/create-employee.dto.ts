@@ -1,4 +1,4 @@
-import { IsArray, IsInt, IsNotEmpty, IsString, MaxLength } from "class-validator";
+import {IsInt, IsNotEmpty, IsString, MaxLength } from "class-validator";
 
 export class CreateEmployeeDto{
 

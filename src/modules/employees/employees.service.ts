@@ -29,7 +29,7 @@ export class EmployeesService {
     }
 
     async findById(id: number): Promise<EmployeeResponseDto> {
-        const employee = await this.employeeRepository.findOneBy({ id_employee: id });
+        const employee = await this.employeeRepository.findOne({ where: {id_employee: id},relations:['role'] });
 
         if (!employee) {
             throw new NotFoundException('El trabajador no existe');

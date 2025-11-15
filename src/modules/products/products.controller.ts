@@ -13,9 +13,11 @@ import { Roles } from 'src/common/decorators/roles/roles.decorator';
 @Roles('ADMIN')
 export class ProductsController {
 
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
   async findAll(): Promise<BaseApplicationResponseDto<ProductResponseDto[]>> {
     const products = await this.productsService.findAll();
     return {
@@ -26,6 +28,8 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN', 'Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
   async findById(@Param('id') id: string): Promise<BaseApplicationResponseDto<ProductResponseDto>> {
     const product = await this.productsService.findById(+id);
     return {
@@ -36,6 +40,8 @@ export class ProductsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
   async createProduct(@Body() createProductDto: CreateProductDto): Promise<BaseApplicationResponseDto<ProductResponseDto>> {
     const product = await this.productsService.createProduct(createProductDto);
     return {
@@ -46,21 +52,13 @@ export class ProductsController {
   }
 
   @Patch(':id')
-  async updateProduct(@Param('id') id: string,@Body() updateProductDto: UpdateProductDto): Promise<BaseApplicationResponseDto<ProductResponseDto>> {
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('ADMIN')
+  async updateProduct(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<BaseApplicationResponseDto<ProductResponseDto>> {
     const product = await this.productsService.updateProduct(+id, updateProductDto);
     return {
       statusCode: 200,
       message: 'Producto actualizado correctamente',
-      data: product
-    };
-  }
-
-  @Delete(':id')
-  async deleteProduct(@Param('id') id: string): Promise<BaseApplicationResponseDto<ProductResponseDto>> {
-    const product = await this.productsService.deleteProduct(+id);
-    return {
-      statusCode: 200,
-      message: 'Producto eliminado correctamente',
       data: product
     };
   }

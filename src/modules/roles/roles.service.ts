@@ -13,7 +13,7 @@ export class RolesService {
     constructor(@InjectRepository(Role) private roleRepository: Repository<Role>){}
 
     async findAll(): Promise<RoleResponseDto[]>{
-        const roles = await this.roleRepository.find()
+        const roles = await this.roleRepository.find({relations: ['area']})
 
         if(!roles || roles.length === 0){
             throw new NotFoundException('No se encontraron roles');
@@ -23,7 +23,7 @@ export class RolesService {
     }
 
     async findById(id:number): Promise<Role>{
-        const role = await this.roleRepository.findOneBy({id_role: id});
+        const role = await this.roleRepository.findOne({where: {id_role: id}, relations: ['area']});
 
         if(!role){
             throw new NotFoundException('Rol no encontrado');

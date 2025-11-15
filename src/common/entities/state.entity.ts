@@ -1,7 +1,7 @@
 import { Order } from "src/modules/orders/entities/order.entity";
 import { Product } from "src/modules/products/entities/product.entity";
 import { Task } from "src/modules/tasks/entities/task.entity";
-import { Column, Entity, Generated, OneToMany, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, Generated, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum StateName {
     PENDING = 'PENDING',
@@ -10,14 +10,13 @@ export enum StateName {
     DELAYED = 'DELAYED',
 }
 
-@Entity('STATES')
+@Entity('states')
 export class State {
-    
-    @PrimaryColumn({ name: 'ID_STATE', type: 'number'})
-    @Generated('increment')
+
+    @PrimaryGeneratedColumn({ name: 'id_state', type: 'integer' })
     id_state: number;
 
-    @Column({ name: 'NAME', type: 'varchar2', length: 20, unique: true, nullable: false })
+    @Column({name: 'name',type: 'varchar',length: 20,  unique: true, nullable: false})
     name: StateName;
 
     @OneToMany(() => Order, (order) => order.state)

@@ -16,7 +16,7 @@ import { RolesGuard } from 'src/guards/roles/roles.guard';
 export class RolesController {
     constructor(private readonly rolesService: RolesService){}
 
-    @Get()
+    @Get('all')
     async findAll(): Promise<BaseApplicationResponseDto<RoleResponseDto[]>>{
         const roles = await this.rolesService.findAll()
         return{

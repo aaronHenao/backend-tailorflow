@@ -76,14 +76,21 @@ export class TasksService {
     async findAssignedTasks(employeeId: number): Promise<TaskResponseDto[]> {
         const tasks = await this.taskRepository.find({
             where: { id_employee: employeeId },
-            relations: ['product']
+            relations: ['product'],
+            order: { product: { id_product: 'ASC' } }
         });
 
-        if (!tasks || tasks.length === 0) {
-            throw new NotFoundException('No tienes tareas asignadas');
-        }
-        return tasks.map(task => plainToInstance(TaskResponseDto, task, { excludeExtraneousValues: true }));
+        const enrichedTasks = await Promise.all(tasks.map(async (task) => {
+            const previousTask = await this.findPreviousTask(task.id_product, task.sequence);
+            return {
+                ...task,
+                previous_state: previousTask ? previousTask.id_state : null
+            };
+        }));
+
+        return enrichedTasks.map(task => plainToInstance(TaskResponseDto, task, { excludeExtraneousValues: true }));
     }
+
 
     private async updateCascadingStates(idTask: number): Promise<void> {
         const task = await this.taskRepository.findOne({
@@ -97,7 +104,10 @@ export class TasksService {
         const orderId = task.product.id_order;
 
         await this.updateProductState(productId);
-        await this.updateOrderState(orderId);
+        if (orderId) {
+            await this.updateOrderState(orderId);
+        }
+
     }
 
     private async updateProductState(productId: number): Promise<void> {
@@ -123,41 +133,47 @@ export class TasksService {
         }
 
 
-        await this.dataSource.query(
-            'UPDATE PRODUCTS SET ID_STATE = :state WHERE ID_PRODUCT = :productId',
-            [newState, productId]
-        );
+        await this.dataSource
+            .createQueryBuilder()
+            .update('products')
+            .set({ id_state: newState })
+            .where('id_product = :productId', { productId })
+            .execute();
     }
 
 
     private async updateOrderState(orderId: number): Promise<void> {
 
-        const products = await this.dataSource.query(
-            'SELECT ID_STATE FROM PRODUCTS WHERE ID_ORDER = :orderId',
-            [orderId]
-        );
+        const products = await this.dataSource
+            .createQueryBuilder()
+            .select('p.id_state', 'id_state')
+            .from('products', 'p')
+            .where('p.id_order = :orderId', { orderId })
+            .getRawMany();
 
         if (!products || products.length === 0) return;
 
-        const allPending = products.every(p => p.ID_STATE === 1);
-        const allFinished = products.every(p => p.ID_STATE === 3);
-        const someInProgress = products.some(p => p.ID_STATE === 2);
+        const allPending = products.every(p => p.id_state === 1);
+        const allFinished = products.every(p => p.id_state === 3);
+        const someInProgress = products.some(p => p.id_state === 2);
 
         let newState: number;
 
         if (allFinished) {
             newState = 3;
-        } else if (someInProgress || products.some(p => p.ID_STATE === 3)) {
+        } else if (someInProgress || products.some(p => p.id_state === 3)) {
             newState = 2;
         } else {
             newState = 1;
         }
 
 
-        await this.dataSource.query(
-            'UPDATE ORDERS SET ID_STATE = :state WHERE ID_ORDER = :orderId',
-            [newState, orderId]
-        );
+        await this.dataSource
+            .createQueryBuilder()
+            .update('orders')
+            .set({ id_state: newState })
+            .where('id_order = :orderId', { orderId })
+            .execute();
     }
 
 
@@ -241,11 +257,15 @@ export class TasksService {
     }
 
     async findByProductId(productId: number): Promise<Task[]> {
-        return await this.taskRepository.find({where: { id_product: productId },relations: ['state']});
+        return await this.taskRepository.find({ where: { id_product: productId }, relations: ['state'] });
     }
 
     async deleteByProductId(productId: number): Promise<void> {
         await this.taskRepository.delete({ id_product: productId });
+    }
+
+    async getProductTask(id_product: number): Promise<Task[]> {
+        return await this.taskRepository.find({ where: { id_product: id_product } });
     }
 
 }

@@ -14,10 +14,9 @@ export class TasksController {
 
     constructor(private readonly tasksService: TasksService) { }
 
-    //Para admin
     @Get()
     @UseGuards(RolesGuard)
-    @Roles('ADMIN')
+    @Roles('ADMIN', 'Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
     async findAll(): Promise<BaseApplicationResponseDto<TaskResponseDto[]>> {
         const tasks = await this.tasksService.findAll();
         return {
@@ -29,7 +28,7 @@ export class TasksController {
 
     @Get('assigned')
     @UseGuards(RolesGuard)
-    @Roles('ESQUELETERIA', 'CORTE', 'TAPICERO', 'COSTURERO', 'PINTOR')
+    @Roles('Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
     async getAssignedTasks(@GetUser() user: Employee): Promise<BaseApplicationResponseDto<TaskResponseDto[]>> {
         const tasks = await this.tasksService.findAssignedTasks(user.id_employee);
         return {
@@ -39,11 +38,9 @@ export class TasksController {
         };
     }
 
-
-
     @Get(':id')
     @UseGuards(RolesGuard)
-    @Roles('ESQUELETERIA', 'CORTE', 'TAPICERO', 'COSTURERO', 'PINTOR')
+    @Roles('Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
     async findById(@Param('id') id: string): Promise<BaseApplicationResponseDto<TaskResponseDto>> {
         const task = await this.tasksService.findById(+id);
         return {
@@ -55,7 +52,7 @@ export class TasksController {
 
     @Patch(':id/start')
     @UseGuards(RolesGuard)
-    @Roles('ESQUELETERIA', 'CORTE', 'TAPICERO', 'COSTURERO', 'PINTOR')
+    @Roles('Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
     async startTask(@Param('id') idTask: string, @GetUser() user: Employee): Promise<BaseApplicationResponseDto<TaskResponseDto>> {
         const updatedTask = await this.tasksService.startTask(+idTask, user.id_employee);
         return {
@@ -67,7 +64,7 @@ export class TasksController {
 
     @Patch(':id/complete')
     @UseGuards(RolesGuard)
-    @Roles('ESQUELETERIA', 'CORTE', 'TAPICERO', 'COSTURERO', 'PINTOR')
+    @Roles('Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
     async completeTask(@Param('id') idTask: string, @GetUser() user: Employee): Promise<BaseApplicationResponseDto<TaskResponseDto>> {
         const updatedTask = await this.tasksService.completeTask(+idTask, user.id_employee);
         return {
@@ -77,4 +74,15 @@ export class TasksController {
         };
     }
 
+    @Get(':id/product-tasks')
+    @UseGuards(RolesGuard)
+    @Roles('Esqueletería', 'Corte', 'Tapicero', 'Costurero', 'Pintor')
+    async getProductTasks(@Param('id') id:string){
+        const tasks = await this.tasksService.getProductTask(+id);
+        return {
+            statusCode: 200,
+            message: 'Tareas mostradas correctamente',
+            data: tasks
+        }
+    }
 }

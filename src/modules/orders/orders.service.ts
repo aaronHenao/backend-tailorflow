@@ -44,8 +44,7 @@ export class OrdersService {
                 ...p,
                 category_name: p.category.name,
                 state_name: p.state.name,
-                order_id: p.id_order,
-                customized_label: p.customized === 1 ? 'Personalizado' : 'Estándar'
+                order_id: p.id_order
             }))
         }, { excludeExtraneousValues: true });
     }

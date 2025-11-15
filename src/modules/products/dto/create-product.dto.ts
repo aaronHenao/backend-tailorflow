@@ -1,18 +1,4 @@
-import { Type } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, IsPositive, IsIn, MaxLength, Min, IsArray, ValidateNested } from 'class-validator';
-
-//Para gestion
-export class ProductMaterialDto {
-  @IsInt({ message: 'El ID del material debe ser un número entero' })
-  @IsNotEmpty({ message: 'El ID del material es obligatorio' })
-  id_material: number;
-
-  @IsInt({ message: 'La cantidad debe ser un número entero' })
-  @IsNotEmpty({ message: 'La cantidad es obligatoria' })
-  @Min(1, { message: 'La cantidad debe ser al menos 1' })
-  quantity: number;
-}
-
+import { IsInt, IsNotEmpty, IsOptional, IsString, IsPositive, IsIn, MaxLength} from 'class-validator';
 
 export class CreateProductDto {
   
@@ -54,10 +40,4 @@ export class CreateProductDto {
   @MaxLength(300, { message: 'El campo description no puede tener más de 300 caracteres.' })
   description?: string;
 
-  //Para gestion
-  @IsArray({ message: 'Los materiales deben ser un array' })
-  @ValidateNested({ each: true })
-  @Type(() => ProductMaterialDto)
-  @IsNotEmpty({ message: 'Debe especificar al menos un material' })
-  materials: ProductMaterialDto[];
 }

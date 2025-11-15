@@ -15,7 +15,7 @@ export class FlowsController {
 
     constructor(private flowsService: FlowsService) { }
 
-    @Get()
+    @Get('all')
     async findAll(): Promise<BaseApplicationResponseDto<FlowResponseDto[]>> {
         const flows = await this.flowsService.findAll()
         return {

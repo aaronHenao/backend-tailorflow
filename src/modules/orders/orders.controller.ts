@@ -14,7 +14,7 @@ import { Roles } from 'src/common/decorators/roles/roles.decorator';
 export class OrdersController {
     constructor(private ordersService: OrdersService){}
 
-    @Get()
+    @Get('all')
     async findAll(): Promise<BaseApplicationResponseDto<OrderResponseDto[]>>{
         const orders = await this.ordersService.findAll()
         return{

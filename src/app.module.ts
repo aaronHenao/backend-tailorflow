@@ -10,11 +10,9 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { FlowsModule } from './modules/flows/flows.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { OrdersModule } from './modules/orders/orders.module';
-import { MaterialsModule } from './modules/materials/materials.module';
 import { ProductsModule } from './modules/products/products.module';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { AuthModule } from './common/modules/auth/auth.module';
-import { OracleProceduresModule } from './modules/oracleprocedures/oracle-procedures.module';
 
 @Module({
   imports: [RolesModule, 
@@ -24,16 +22,15 @@ import { OracleProceduresModule } from './modules/oracleprocedures/oracle-proced
     
     inject: [ConfigService],
     useFactory: (configService : ConfigService) => ({
-      type: 'oracle',
+      type: 'postgres',
       host: configService.get<string>('DB_HOST'),
       port: configService.get<number>('DB_PORT'),
-      username: configService.get<string>('DB_USERNAME'),
+      username: configService.get<string>('DB_USER'),
       password: configService.get<string>('DB_PASSWORD'),
-      serviceName: configService.get<string>('SERVICE_NAME'),
-      schema: configService.get<string>('DB_SCHEMA'),
-      timezone: 'local',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], 
-      synchronize: false,
+      database: configService.get<string>('DB_NAME'),
+      ssl: { rejectUnauthorized: false },
+      entities: [__dirname+ '/**/*.entity{.ts,.js}'],
+      synchronize: true,
     })
   }),
     EmployeesModule,
@@ -43,10 +40,8 @@ import { OracleProceduresModule } from './modules/oracleprocedures/oracle-proced
     CustomersModule,
     OrdersModule,
     ProductsModule,
-    MaterialsModule,
     TasksModule,
     AuthModule,
-    OracleProceduresModule,
    ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,30 +1,28 @@
 import { Category } from "src/modules/categories/entities/category.entity";
 import { Role } from "src/modules/roles/entities/role.entity";
-import { Column, Entity, Generated, JoinColumn, ManyToOne, PrimaryColumn, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
-@Entity('FLOWS')
+@Entity('flows')
 @Unique(['id_category', 'sequence'])
 export class Flow {
 
-    @PrimaryColumn({name: 'ID_FLOW', type: 'number'})
-    @Generated('increment')
-    id_flow: number;
+  @PrimaryGeneratedColumn({ name: 'id_flow', type: 'integer' })
+  id_flow: number;
 
-    @Column({ name: 'ID_CATEGORY', type: 'number' })
-    id_category: number;
+  @Column({ name: 'id_category', type: 'integer' })
+  id_category: number;
 
-    @Column({ name: 'ID_ROLE', type: 'number' })
-    id_role: number;
+  @Column({ name: 'id_role', type: 'integer' })
+  id_role: number;
 
-    @Column({name: 'SEQUENCE', type: 'number'})
-    sequence: number;
+  @Column({ name: 'sequence', type: 'integer' })
+  sequence: number;
 
-    @ManyToOne(() => Role, (role) => role.flows)
-    @JoinColumn({ name: 'ID_ROLE' })
-    role: Role;
+  @ManyToOne(() => Role, (role) => role.flows)
+  @JoinColumn({ name: 'id_role' })
+  role: Role;
 
-    @ManyToOne(() => Category, (category) => category.flows)
-    @JoinColumn({ name: 'ID_CATEGORY' })
-    category: Category;
-    
+  @ManyToOne(() => Category, (category) => category.flows)
+  @JoinColumn({ name: 'id_category' })
+  category: Category;
 }

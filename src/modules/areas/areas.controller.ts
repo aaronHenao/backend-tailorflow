@@ -13,7 +13,7 @@ import { Roles } from 'src/common/decorators/roles/roles.decorator';
 export class AreasController {
   constructor(private readonly areasService: AreasService) {}
 
-  @Get()
+  @Get('all')
   async findAll(): Promise<BaseApplicationResponseDto<AreaResponseDto[]>>{
     const areas = await this.areasService.findAll();
         return{

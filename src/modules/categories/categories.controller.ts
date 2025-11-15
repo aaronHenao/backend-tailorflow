@@ -14,7 +14,7 @@ import { Roles } from 'src/common/decorators/roles/roles.decorator';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Get()
+  @Get('all')
   async findAll(): Promise<BaseApplicationResponseDto<CategoryResponseDto[]>> {
     const categories = await this.categoriesService.findAll();
     return { 

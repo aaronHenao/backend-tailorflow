@@ -1,17 +1,16 @@
-  import { Flow } from 'src/modules/flows/entities/flow.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Flow } from 'src/modules/flows/entities/flow.entity';
 import { Product } from 'src/modules/products/entities/product.entity';
-import { Column, Entity, Generated, OneToMany, PrimaryColumn } from 'typeorm';  
-@Entity('CATEGORY')
-export class Category {
 
-  @PrimaryColumn({ name: 'ID_CATEGORY', type: 'number' })  
-  @Generated('increment')
+@Entity({ name: 'categories' })
+export class Category {
+  @PrimaryGeneratedColumn({ name: 'id_category', type: 'integer' })
   id_category: number;
 
-  @Column({ name: 'NAME', type: 'varchar2', length: 50,  unique: true })
+  @Column({ name: 'name', type: 'varchar', length: 50, unique: true })
   name: string;
 
-  @Column({ name: 'DESCRIPTION', type: 'varchar2',  length: 100,  nullable: true })
+  @Column({ name: 'description', type: 'varchar', length: 100, nullable: true })
   description: string;
 
   @OneToMany(() => Flow, (flow) => flow.category)
@@ -19,4 +18,4 @@ export class Category {
 
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
-} 
+}

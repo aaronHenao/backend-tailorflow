@@ -3,7 +3,6 @@ import { ProductResponseDto } from 'src/modules/products/dto/product-response.dt
 import { EmployeeResponseDto } from 'src/modules/employees/dto/employee-response.dto';
 import { AreaResponseDto } from 'src/modules/areas/dto/area-respose.dto';
 import { StateResponseDto } from 'src/common/dto/state-response.dto';
-import { MaterialConsumptionResponseDto } from 'src/modules/materials/dto/material-consumption/material-consumption-response.dto';
 
 @Exclude()
 export class TaskResponseDto {
@@ -47,7 +46,4 @@ export class TaskResponseDto {
     @Type(() => StateResponseDto)
     state?: StateResponseDto;
 
-    @Expose()
-    @Type(() => MaterialConsumptionResponseDto)
-    materialConsumptions?: MaterialConsumptionResponseDto[];
 }

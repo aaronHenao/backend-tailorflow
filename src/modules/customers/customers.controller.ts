@@ -15,7 +15,7 @@ export class CustomersController {
 
     constructor(private customersService: CustomersService) { }
 
-    @Get()
+    @Get('all')
     async findAll(): Promise<BaseApplicationResponseDto<CustomerResponseDto[]>> {
         const customers = await this.customersService.findAll();
 

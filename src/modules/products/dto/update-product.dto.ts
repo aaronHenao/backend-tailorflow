@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, IsPositive, IsIn, MaxLength } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsPositive, MaxLength } from 'class-validator';
 
 export class UpdateProductDto {
     

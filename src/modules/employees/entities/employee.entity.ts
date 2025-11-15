@@ -1,39 +1,38 @@
 import { Role } from "src/modules/roles/entities/role.entity";
 import { Task } from "src/modules/tasks/entities/task.entity";
-import { Column, Entity, JoinColumn, ManyToOne, Check, PrimaryColumn, Generated, OneToMany } from "typeorm";
+import {Column,Entity,JoinColumn,ManyToOne,Check,PrimaryGeneratedColumn,OneToMany,} from "typeorm";
 
 export enum States {
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
 }
 
-@Check(`"STATE" IN ('ACTIVE', 'INACTIVE')`)
-@Entity('EMPLOYEES')
+@Check(`"state" IN ('ACTIVE', 'INACTIVE')`)
+@Entity({ name: 'employees' })
 export class Employee {
-
-  @PrimaryColumn({ name: 'ID_EMPLOYEE', type: 'number' })
-  @Generated('increment')
+  
+  @PrimaryGeneratedColumn({ name: 'id_employee' })
   id_employee: number;
 
-  @Column({ name: 'ID_ROLE', type: 'number' })
+  @Column({ name: 'id_role' })
   id_role: number;
 
-  @Column({ name: 'CC', type: 'varchar2', length: 20, unique: true })
+  @Column({ name: 'cc', type: 'varchar', length: 20, unique: true })
   cc: string;
 
-  @Column({ name: 'NAME', type: 'varchar2', length: 100 })
+  @Column({ name: 'name', type: 'varchar', length: 100 })
   name: string;
 
-  @Column({ name: 'PASSWORD', type: 'varchar2', length: 255 })
+  @Column({ name: 'password', type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ name: 'STATE', type: 'varchar2', length: 20, default: States.ACTIVE })
+  @Column({name: 'state',type: 'varchar',length: 20,default: States.ACTIVE})
   state: States;
 
-  @ManyToOne(() => Role, role => role.employees, { nullable: false })
-  @JoinColumn({ name: 'ID_ROLE' })
+  @ManyToOne(() => Role, (role) => role.employees, { nullable: false })
+  @JoinColumn({ name: 'id_role' })
   role: Role;
 
-  @OneToMany(() => Task, task => task.employee)
+  @OneToMany(() => Task, (task) => task.employee)
   tasks: Task[];
 }
